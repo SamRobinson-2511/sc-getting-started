@@ -89,6 +89,18 @@ value {
 table.atAll(#[c4, e4, gs4, c5, e5, gs5, c6]);
 )
 
+//Client Versus Server
+//directly address server
+n = s.nextNodeID;
+s.sendMsg("/s_new", "default", n);
+s.sendMsg("/n_free", n);
+
+//indirectly address server
+x = Synth("default");
+x.free;
+
+{SinOsc.ar}.play;
+
 
 
 
