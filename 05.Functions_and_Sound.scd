@@ -95,8 +95,21 @@ var abc = 2;
 var level = 0, slope = 1, curve = 1;
 
 
+//Function
+//example
 
+(
+var a, b, c;
+a = {[100, 200, 300].choose};
+b = {10.rand + 1};
+c = a + b;
+c.value.postln;
+)
 
+//returning first argument itself
+{|x| x}.value(1); //SuperCollider
+[:x|x]value:1; //Smalltalk
+((lambda(x)x)1); //Lisp
 
 
 
