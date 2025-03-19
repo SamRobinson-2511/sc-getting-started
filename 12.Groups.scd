@@ -52,13 +52,26 @@ x.free; h.free; g.free;
 
 
 //The Root Node and the Default Group
+s.boot;
+a = Synth(\default);
+a.group;
 
+{SinOsc.ar(mul: 0.2)}.scope(1);
+s.queryAllNodes;
 
+//Groups as, well, groups . . .
+g = Group.new;
+//make 4 synths in g
+//1.0.rand2 returns a random number from -1 to 1
+4.do({ { arg amp = 0.1; Pan2.ar(SinOsc.ar(440 + 110.rand, 0, amp), 1.0.rand2) }.play(g); });
+g.set(\amp, 0.005);
+g.free;
 
-
-
-
-
+Group.superclass;
+Group.superclass.help;
+Group.findRespondingMethodFor('set');
+Group.findRespondingMethodFor('postln');
+Group.helpFileForMethod('postln');
 
 
 
