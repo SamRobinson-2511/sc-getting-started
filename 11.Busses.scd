@@ -63,26 +63,70 @@ SynthDef("tutorial-DecayPink", {
 
 SynthDef("tutorial-DecaySin", {
 	|outBus = 0, effectBus, direct = 0.5|
+	var source;
 	source = Decay2.ar(Impulse.ar(0.3, 0.25), 0.3, 1, SinOsc.ar(SinOsc.kr(0.2, 0, 110, 440)));
 	Out.ar(outBus, source * direct);
 	Out.ar(effectBus, source * (1-direct));
-})
+}).add;
 
 SynthDef("tutorial-Reverb", {
 	|outBus = 0, inBus|
+	var input;
+	input = In.ar(inBus, 1);
+	16.do({ input = AllpassC.ar(input, 0.04, {Rand(0.001, 0.04)}.dup, 3)});
+	Out.ar(outBus, input);
 
-})
+}).add;
 
 b = Bus.audio(s, 1);
 )
 
+(
+x = Synth("tutorial-Reverb", [\inBus, b]);
+y = Synth.before(x, "tutorial-DecayPink", [\effectBus, b]);
+z = Synth.before(x, "tutorial-DecaySin", [\effectBus, b, \outBus, 1]);
+)
+
+y.set(\direct, 1);
+z.set(\direct, 1);
+y.set(\direct, 0);
+z.set(\direct, 0);
+x.free; y.free; z.free; b.free;
 
 
+//More fun with control busses
+(
+b = Bus.control(s, 1); b.set(880);
+c = Bus.control(s, 1); c.set(884);
+x = SynthDef("tutorial-map", {
+	|freq1 = 440, freq2 = 440, out|
+	Out.ar(out, SinOsc.ar([freq1, freq2], 0, 0.1));
+}).play(s);
+)
+x.map(\freq1, b, \freq2, c);
+y = {Out.kr(b, SinOsc.kr(1, 0, 50, 880))}.play(addAction: \addToHead);
+y.free;
+b.get({|val| val.postln; f = val;});
+x.set(\freq2, f / 2);
+c.set(200);
+x.free; b.free; c.free;
+
+b = Bus.control(s, 1); b.set(880);
+(
+f = nil;
+b.get({|val| f = val;});
+f.postln;
+)
+f.postln;
+
+x = Synth("default", [\freq, 300]);
+y = Synth("default", [\freq, 450], x, \addAfter);
+x.free; y.free;
 
 
-
-
-
+//these two lines of code are equivalent
+y = Synth.new("default", [\freq, 450], x, \addAfter);
+y = Synth.after(x, "default", [\freq, 450]);
 
 
 
