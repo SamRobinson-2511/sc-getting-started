@@ -51,4 +51,41 @@ z = Synth.after(x, "tutorial-Infreq", [\bus, b, \freqOffset, 200]);
 x.free; y.free; z.free; b.free;
 
 
+(
+SynthDef("tutorial-DecayPink", {
+	|outBus=0, effectBus, direct=0.5|
+	var source;
+	source = Decay2.ar(Impulse.ar(1, 0.25), 0.01, 0.2, PinkNoise.ar);
+	Out.ar(outBus, source * direct);
+	Out.ar(effectBus, source * (1 - direct));
+}).add;
+
+
+SynthDef("tutorial-DecaySin", {
+	|outBus = 0, effectBus, direct = 0.5|
+	source = Decay2.ar(Impulse.ar(0.3, 0.25), 0.3, 1, SinOsc.ar(SinOsc.kr(0.2, 0, 110, 440)));
+	Out.ar(outBus, source * direct);
+	Out.ar(effectBus, source * (1-direct));
+})
+
+SynthDef("tutorial-Reverb", {
+	|outBus = 0, inBus|
+
+})
+
+b = Bus.audio(s, 1);
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
